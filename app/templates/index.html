@@ -1,0 +1,344 @@
+{% extends "base.html" %} 
+{% block content %}
+<style type="text/css">
+  .navbar-item:hover {
+    background-color: #b9293c;
+  }
+
+  .left {
+    float: left;
+  }
+
+  .right {
+    float: right;
+  }
+
+  /* Title, subtitle, and horizontal line. */
+  .title {
+    margin-top: 9rem;
+    text-align: center;
+    line-height: 1.6rem;
+  }
+
+  .title-text {
+    font-family:'Courier New', Courier, monospace;
+    font-size: 5rem;
+  }
+
+  .subtitle-text {
+    font-size: 2.9rem;
+  }
+
+  .hr {
+    border-style: solid;
+    border-width: 0.08rem;
+    border-color: #8d7f7f;
+    width: 55rem;
+  }
+
+  /* Buttons, post text area, name input, and body styling. */
+  .content {
+    min-height: 100%;
+    height: 100%;
+  }
+
+  .btn:hover {
+    background-color: #b92948;
+    cursor: pointer;
+  }
+
+  .post-textarea,
+  .name-input {
+    font-family:'Courier New', Courier, monospace;
+    font-size: 1.8rem;
+    padding: 1.2rem;
+    border-radius: 0.4rem;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-color: #000303;
+  }
+
+  .request_tx {
+    margin: 2.5rem 2.5rem 14rem 2.5rem;
+  }
+ 
+  
+  /* Post boxes styling */
+  .post_box {
+    background: rgb(131, 251, 245);
+    padding: 1.2rem 0 0 1.2rem;
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    border: 0.1rem solid #7f8c8d;
+  }
+
+  .post_box-header {
+    padding-bottom: 1.2rem;
+    font-size: 1.4rem;
+  }
+
+  .post_box-avatar {
+    width: 3.8rem;
+    height: 3.8rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 2.2rem;
+    float: left;
+    margin-right: 1.6rem;
+    border: 0.1rem solid #fff;
+    box-shadow: 0 0 0 0.2rem #f00;
+  }
+
+  .post_box-avatar::after {
+    content: "";
+    display: block;
+  }
+
+  .post_box-name {
+    font-weight: bold;
+  }
+
+  .post_box-subtitle {
+    color: #777;
+  }
+
+  .post_box-body {
+    margin-top: 1.6rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.4rem;
+  }
+
+  .post_box-options {
+    float: right;
+  }
+
+  .option-btn {
+    background: #f8f8f8;
+    border: none;
+    color: #502c2c;
+    padding: 0.7rem;
+    cursor: pointer;
+    font-size: 1.4rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    outline: none;
+    height: 4.2rem;
+  }
+
+  /* Custom styles for improved UI */
+  .upload-form {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+
+  .file-input {
+    margin-bottom: 15px;
+  }
+
+  .post-box {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+
+  .post-box .post-box-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .post-box .post-box-header .post-box-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+  }
+
+  .post-box .post-box-header .name-header {
+    font-weight: bold;
+  }
+
+  .file-link {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  .file-link:hover {
+    text-decoration: underline;
+  }
+
+  .btn-upload {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-upload:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+
+  .custom-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+}
+
+.custom-button:hover {
+    background-color: #2980b9;
+    color: #fff;
+}
+
+</style>
+
+<!-- <div class="container-fluid">
+  <div class="row" style="padding-top: 10px">
+    <div class="col-sm-4" style="">
+      <h2 class="text-center alert alert-primary">Upload a File</h2>
+      <form action="/submit" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label>User Name:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="user"
+            placeholder="Enter Your Name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1">Upload a File:</label>
+          <input
+            type="file"
+            id="fileUpld"
+            name="v_file"
+            accept=".*"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Upload</button>
+      </form>
+    </div>
+
+    <div class="col-sm-7">
+      <h2 class="text-center alert alert-primary">Uploaded Files</h2>
+      {% for post in request_tx %}
+      <div class="post_box">
+        <div class="post_box-header">
+          <div
+            style="
+              background: rgb(219, 52, 52) none repeat scroll 0% 0%;
+              box-shadow: rgb(0, 4, 6) 0 0 0 0.2rem;
+            "
+            class="post_box-avatar"
+          >
+            {{post.user[0]}}
+          </div>
+          <div class="name-header">{{post.user}}</div>
+        </div>
+        <div>
+          <div class="post_box-body">
+            <p>
+              {{post.v_file}}&#x2192<a href="{{url_for('download_file',variable = post.v_file)}}"
+                >Download</a
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="col-sm-1"></div>
+  </div>
+</div> -->
+
+<div class="container-fluid">
+  <div class="row" style="padding-top: 10px">
+    <div class="col-sm-12">
+      <div class="jumbotron jumbotron-fluid text-center bg-dark rounded">
+        <div class="container">
+          <h1 class="display-4 text-white">Welcome to IPFS Storage!</h1>
+          <p class="lead text-white">IPFS Storage is a decentralized network for file storage and sharing powered by blockchain technology.</p>
+          <p class="text-white">Follow the steps below to securely upload and share your files:</p>
+          <ol class="text-left text-white">
+            <li><strong>User Name:</strong> Enter your name in the "User Name" field. This will help identify the uploader of the file.</li>
+            <li><strong>Upload a File:</strong> Click on the "Choose File" button to select the file you want to upload from your device.</li>
+            <li><strong>Submit:</strong> Once you've selected the file, click the "Upload" button to initiate the upload process.</li>
+            <li><strong>Confirmation:</strong> After uploading, your file will be securely stored on the blockchain network, ensuring its integrity and security.</li>
+            <li><strong>View Uploaded Files:</strong> You can view all the files you've uploaded in the section below. Each file is listed with its name, size, and a link to download it.</li>
+          </ol>
+          <p class="lead">
+            <!-- <a class="btn btn-primary btn-lg" href="#upload-section" role="button">Get Started</a> -->
+            <a class="btn btn-primary btn-lg" href="#upload-section" role="button" style="background-color: #3498db; border-color: #3498db;">Get Started</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" id="upload-section">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="upload-form">
+        <h2 class="text-center text-primary mb-4">Upload a File</h2>
+        <form id="upload-form" action="/submit" method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="user">User Name:</label>
+            <input type="text" class="form-control" id="user" name="user" placeholder="Enter Your Name" required>
+          </div>
+          <div class="form-group file-input">
+            <label for="v_file">Choose File:</label>
+            <input type="file" class="form-control-file" id="v_file" name="v_file" accept=".*" required>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-upload" id="upload-btn">Upload</button>
+            <div id="upload-spinner" class="spinner-border text-primary" role="status" style="display: none;">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2 class="text-center text-primary mt-5">Uploaded Files</h2>
+      {% for post in request_tx %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ post.user }}</h5>
+          <p class="card-text">File: {{ post.v_file }}</p>
+          <p class="card-text">File Size: {{ post.file_size }} KB</p>
+          <a href="{{url_for('download_file',variable = post.v_file)}}" class="btn custom-button btn-primary">Download</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Show loading spinner when upload button is pressed
+  document.getElementById("upload-form").addEventListener("submit", function() {
+    document.getElementById("upload-btn").style.display = "none";
+    document.getElementById("upload-spinner").style.display = "inline-block";
+  });
+</script>
+
+{% endblock %}
