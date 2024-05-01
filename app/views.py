@@ -6,18 +6,18 @@ from werkzeug.utils import secure_filename
 from app import app
 from timeit import default_timer as timer
 
-# Stores all the post transaction in the node
+
 request_tx = []
-#store filename
+
 files = {}
-#destiantion for upload files
+
 UPLOAD_FOLDER = "app/static/Uploads"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# store  address
+
 ADDR = "http://127.0.0.1:8800"
 
 
-#create a list of requests that peers has send to upload files
+
 def get_tx_req():
     global request_tx
     chain_addr = "{0}/chain".format(ADDR)
@@ -33,7 +33,7 @@ def get_tx_req():
         request_tx = sorted(content,key=lambda k: k["hash"],reverse=True)
 
 
-# Loads and runs the home page
+
 @app.route("/")
 def index():
     get_tx_req()
@@ -41,34 +41,34 @@ def index():
 
 
 @app.route("/submit", methods=["POST"])
-# When new transaction is created it is processed and added to transaction
+
 def submit():
     start = timer()
     user = request.form["user"]
     up_file = request.files["v_file"]
     
-    #save the uploaded file in destination
+    
     up_file.save(os.path.join("app/static/Uploads/",secure_filename(up_file.filename)))
-    #add the file to the list to create a download link
+    
     files[up_file.filename] = os.path.join(app.root_path, "static" , "Uploads", up_file.filename)
-    #determines the size of the file uploaded in bytes 
+    
     file_states = os.stat(files[up_file.filename]).st_size 
-    #create a transaction object
+    
     post_object = {
-        "user": user, #user name
-        "v_file" : up_file.filename, #filename
-        "file_data" : str(up_file.stream.read()), #file data
-        "file_size" : file_states   #file size
+        "user": user, 
+        "v_file" : up_file.filename, 
+        "file_data" : str(up_file.stream.read()), 
+        "file_size" : file_states   
     }
    
-    # Submit a new transaction
+    
     address = "{0}/new_transaction".format(ADDR)
     requests.post(address, json=post_object)
     end = timer()
     print(end - start)
     return redirect("/")
 
-#creates a download link for the file
+
 @app.route("/submit/<string:variable>",methods = ["GET"])
 def download_file(variable):
     p = files[variable]
